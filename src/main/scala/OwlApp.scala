@@ -16,5 +16,11 @@ object OwlApp {
     args foreach { file =>
       println(file + "\t" + (if (Files.isRegularFile(Paths.get(file))) "is ok" else "does not exist or is not a readable file!"))
     }
+
+    // Read and parse layout file
+    val layout = LayoutParser.parse(args.head)
+
+    // Read and validate inputs
+    args.tail.foreach { file => Validator.validate(layout, file) }
   }
 }
