@@ -3,6 +3,9 @@
   */
 object OwlApp {
   def main(args: Array[String]): Unit = {
-    println("Hello " + args.mkString(" "))
+    if (args.isEmpty || args.head == "-h" || args.head == "--help")
+      println("Usage: owl LAYOUT [INPUT1 [INPUT2 [...] ] ]")
+    else
+      println("Hello " + args.mkString(" "))
   }
 }
