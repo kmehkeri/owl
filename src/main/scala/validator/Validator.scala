@@ -1,8 +1,7 @@
-/**
-  * Created by astaroth on 10.07.16.
-  */
+package validator
 
 import scala.io.Source
+import layout.Layout
 
 object Validator {
   def validate(layout: Layout, input: Source): Boolean = {

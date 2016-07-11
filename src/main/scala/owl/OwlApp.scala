@@ -1,9 +1,8 @@
-/**
-  * Created by astaroth on 05.07.16.
-  */
+package owl
 
-import java.nio.file.{Paths, Files}
 import scala.io.Source
+import layout._
+import validator._
 
 object OwlApp {
   def main(args: Array[String]): Unit = {
