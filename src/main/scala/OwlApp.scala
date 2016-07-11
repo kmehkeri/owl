@@ -3,6 +3,7 @@
   */
 
 import java.nio.file.{Paths, Files}
+import scala.io.Source
 
 object OwlApp {
   def main(args: Array[String]): Unit = {
@@ -12,15 +13,19 @@ object OwlApp {
       return
     }
 
-    // Validate arguments
-    args foreach { file =>
-      println(file + "\t" + (if (Files.isRegularFile(Paths.get(file))) "is ok" else "does not exist or is not a readable file!"))
+    try {
+      // Read and parse layout file
+      val layoutSource = Source.fromFile(args.head)
+      val layout = LayoutParser.parse(layoutSource)
+
+      // Read and validate inputs
+      val inputSources =
+        if (args.tail.isEmpty) List(Source.fromInputStream(System.in)) else args.toList.tail.map(Source.fromFile)
+
+      inputSources.foreach(Validator.validate(layout, _))
     }
-
-    // Read and parse layout file
-    val layout = LayoutParser.parse(args.head)
-
-    // Read and validate inputs
-    args.tail.foreach { file => Validator.validate(layout, file) }
+    catch {
+      case e: java.io.IOException => println("ERROR: " + e.getMessage)
+    }
   }
 }
