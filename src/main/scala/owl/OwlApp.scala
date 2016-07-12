@@ -15,7 +15,7 @@ object OwlApp {
     try {
       // Read and parse layout file
       val layoutSource = Source.fromFile(args.head)
-      val layout = LayoutParser.parse(layoutSource)
+      val layout = LayoutParser.fromString(layoutSource.getLines.mkString)
 
       // Read and validate inputs
       val inputSources =
