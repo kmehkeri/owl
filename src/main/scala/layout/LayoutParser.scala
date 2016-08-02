@@ -2,6 +2,7 @@ package layout
 
 import scala.util.matching.Regex
 import scala.util.parsing.combinator.RegexParsers
+import scala.util.{Try,Success,Failure}
 
 sealed trait Definition
 sealed trait Assertion extends Definition
@@ -24,6 +25,8 @@ case class RangeMap(from: Int, to: Int = -1) extends Map
 case class RegexMap(regex: Regex) extends Map
 
 case class Block(map: Map, definition: Definition)
+
+case class LayoutException(msg: String) extends Exception(msg)
 
 object LayoutParser extends RegexParsers {
 
@@ -64,12 +67,12 @@ object LayoutParser extends RegexParsers {
   def blocks = block.*
 
   // Entry point
-  def fromString(input: String): Layout = {
-    parse(block, input) match {
-      case Success(matched, _) => println(matched)
-      case Failure(msg, _) => println(msg)
-      case Error(msg, _) => println(msg)
+  def fromString(input: String): Try[Layout] = {
+    Try {
+      parseAll(block, input) match {
+        case Success(matched, _) => new Layout(matched)
+        case NoSuccess(msg, _) => throw LayoutException("Layout file error: " + msg)
+      }
     }
-    new Layout
   }
 }

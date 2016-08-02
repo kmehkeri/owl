@@ -3,6 +3,7 @@ package owl
 import scala.io.Source
 import layout._
 import validator._
+import scala.util.{Try,Success,Failure}
 
 object OwlApp {
   def main(args: Array[String]): Unit = {
@@ -20,8 +21,11 @@ object OwlApp {
       // Read and validate inputs
       val inputSources =
         if (args.tail.isEmpty) List(Source.fromInputStream(System.in)) else args.toList.tail.map(Source.fromFile)
-
-      inputSources.foreach(Validator.validate(layout, _))
+      
+      layout match {
+        case Success(l) => inputSources.foreach(Validator.validate(l, _))
+        case Failure(ex) => println(ex.getMessage)
+      }
     }
     catch {
       case e: java.io.IOException => println("ERROR: " + e.getMessage)
