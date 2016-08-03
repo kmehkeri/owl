@@ -23,12 +23,16 @@ object OwlApp {
         if (args.tail.isEmpty) List(Source.fromInputStream(System.in)) else args.toList.tail.map(Source.fromFile)
       
       layout match {
-        case Success(l) => inputSources.foreach(Validator.validate(l, _))
-        case Failure(ex) => println(ex.getMessage)
+        case Success(l) => inputSources.foreach { Validator.validate(l, _) match {
+            case Success(s) => println("OK")
+            case Failure(f) => println("Validation error: " + f.getMessage)
+          }
+        }
+        case Failure(ex) => throw ex
       }
     }
     catch {
-      case e: java.io.IOException => println("ERROR: " + e.getMessage)
+      case e: Exception => println("ERROR: " + e.getMessage)
     }
   }
 }
