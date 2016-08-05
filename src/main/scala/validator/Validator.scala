@@ -4,9 +4,9 @@ import scala.io.Source
 import scala.util.{Try,Success,Failure}
 import layout.Layout
 
-object Validator {
+class Validator(debug: Boolean = false) {
   def validate(layout: Layout, input: Source): Try[Boolean] = {
-    //println("Lines in input: " + input.getLines().length)
+    if (debug) println("[DEBUG] Lines in input: " + input.getLines().length)
     Success(true)
   }
 }

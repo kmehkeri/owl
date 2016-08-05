@@ -28,7 +28,7 @@ case class Block(map: Map, definition: Definition)
 
 case class LayoutException(msg: String) extends Exception(msg)
 
-object LayoutParser extends RegexParsers {
+class LayoutParser(debug: Boolean = false) extends RegexParsers {
 
   // Primitives
   def int: Parser[Int] = "[0-9]+".r ^^ { _.toInt }
@@ -70,7 +70,11 @@ object LayoutParser extends RegexParsers {
   def fromString(input: String): Try[Layout] = {
     Try {
       parseAll(block, input) match {
-        case Success(matched, _) => new Layout(matched)
+        case Success(matched, _) => {
+          val layout = new Layout(matched)
+          if (debug) println("[DEBUG] Layout: " + layout.mainBlock)
+          layout
+        }
         case NoSuccess(msg, _) => throw LayoutException("Layout file error: " + msg)
       }
     }
